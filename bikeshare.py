@@ -31,7 +31,7 @@ def get_filters():
     # get user input for day of week (all, monday, tuesday, ... sunday)
     day = input('ENTER DAY : ').lower()
     while day not in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'all']:
-        day = input('ENTER MONTH all, monday, tuesday, ... sunday : ').lower()
+        day = input('ENTER DAY all, monday, tuesday, ... sunday : ').lower()
     
     print('-'*40)
     return city, month, day
