@@ -18,14 +18,14 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
     
     # get user input for city (chicago, new york city, washington). 
-    city = input('ENTER THE CITY: ')
+    city = input('ENTER THE CITY: ').lower()
     while city not in ['chicago', 'new york city', 'washington']:
         city = input ("CHOOSE BETWEEN chicago, new york city OR washington: ").lower()
 
 
     # get user input for month (all, january, february, ... , june)
     month = input('ENTER MONTH: ').lower()
-    while month not in ['all','january', 'february', 'march', 'april', 'may', 'june']:
+    while month not in ['all','january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']:
         month = input('ENTER MONTH all, january, february, ... , june : ').lower()
 
     # get user input for day of week (all, monday, tuesday, ... sunday)
@@ -62,7 +62,7 @@ def load_data(city, month, day):
 
     if month != 'all':
         # use the index of the months list to get the corresponding int
-        months = ['january', 'february', 'march', 'april', 'may', 'june']
+        months = ['all','january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
         month = months.index(month) + 1
 
         # filter by month to create the new dataframe
@@ -154,33 +154,39 @@ def user_stats(df):
 
     # TO DO: Display counts of gender
     try:
-      gender_types = df['Gender'].value_counts()
-      print('\nGender Types:\n', gender_types)
+      	gender_types = df['Gender'].value_counts()
+      	print('\nGender Types:\n', gender_types)
     except KeyError:
-      print("\nGender Types:\nNo data available for this month.")
+     	print("\nGender Types:\nNo data available for this month.")
 
     # TO DO: Display earliest, most recent, and most common year of birth
     try:
-      Earliest_Year = df['Birth Year'].min()
-      print('\nEarliest Year:', Earliest_Year)
+        earliest = df['Birth Year'].min()
+        most_recent = df['Birth Year'].max()
+        most_common = df['Birth Year'].mode()[0]
+        print("The oldest user is borned in {}. The youngest is borned in {}. People borned in {} uses this service most".format(earliest, most_recent, most_common))
     except KeyError:
-      print("\nEarliest Year:\nNo data available for this month.")
-
-    try:
-      Most_Recent_Year = df['Birth Year'].max()
-      print('\nMost Recent Year:', Most_Recent_Year)
-    except KeyError:
-      print("\nMost Recent Year:\nNo data available for this month.")
-
-    try:
-      Most_Common_Year = df['Birth Year'].value_counts().idxmax()
-      print('\nMost Common Year:', Most_Common_Year)
-    except KeyError:
-      print("\nMost Common Year:\nNo data available for this month.")
+        print("There isn't a [Birth Year] column in this spreedsheet!")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_raw_data(df):
+    """ "Displays the data due filteration. 5 rows will added in each press """
+
+    i = 0
+    raw = input("Wanna show the raw data ?\n").lower() # TO DO: convert the user input to lower case using lower() function
+    pd.set_option('display.max_columns',200)
+
+    while True:            
+        if raw == 'no':
+            break
+        elif raw == 'yes':
+            print(df.iloc[i : i+5]) # TO DO: appropriately subset/slice your dataframe to display next five rows
+            raw = input("Wanna show the raw data ?\n").lower() # TO DO: convert the user input to lower case using lower() function
+            i += 5
+        else:
+            raw = input("\nYour input is invalid. Please enter only 'yes' or 'no'\n").lower()
 
 def main():
     while True:
@@ -191,6 +197,7 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+	display_raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
